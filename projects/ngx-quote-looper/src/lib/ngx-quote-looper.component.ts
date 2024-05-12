@@ -4,11 +4,7 @@ import { Component } from '@angular/core';
   selector: 'lib-ngx-quote-looper',
   standalone: true,
   imports: [],
-  template: `
-    <p>
-      ngx-quote-looper works!
-    </p>
-  `,
+  templateUrl: './ngx-quote-looper.component.html',
   styles: ``
 })
 export class NgxQuoteLooperComponent {
