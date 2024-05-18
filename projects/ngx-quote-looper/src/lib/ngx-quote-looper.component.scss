@@ -1,0 +1,13 @@
+:host {
+    --fade-duration: 3s;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity var(--fade-duration) ease-in-out; // Adjust the duration and easing as needed
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity var(--fade-duration) ease-in-out; // Adjust the duration and easing as needed
+}

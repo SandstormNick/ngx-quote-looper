@@ -1,12 +1,85 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, Renderer2, input } from '@angular/core';
+import { Subject, Subscription, interval, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'lib-ngx-quote-looper',
+  selector: 'ngx-quote-looper',
   standalone: true,
-  imports: [],
+  imports: [ CommonModule ],
   templateUrl: './ngx-quote-looper.component.html',
-  styles: ``
+  styleUrl: './ngx-quote-looper.component.scss'
 })
-export class NgxQuoteLooperComponent {
+export class NgxQuoteLooperComponent implements OnInit {
+    @Input() inputQuotes: any[];
+    @Input() authorCSS: { [key: string]: string };
+    @Input() quoteCSS: { [key: string]: string };
+    @Input() looperCSS: { [key: string]: string };
+    @Input() fadeDuration: number = 3000;
+    @Input() loopDuration: number = 6000;
 
+    quoteSubscription: Subscription;
+    private _onDestroy = new Subject<void>();
+
+    public quotes: Quote[];
+    quotesLength: number;
+    currentQuote: string;
+    currentAuthor?: string;
+    quoteChanged: boolean;
+    timeoutDuration: number;
+
+    constructor(private renderer: Renderer2) { }
+
+    ngOnInit(): void {
+        this.setFadeDurationOnCssClasses(this.fadeDuration);
+        this.timeoutDuration = this.loopDuration - this.fadeDuration;
+
+
+        this.quotes = this.inputQuotes.map(quote => new Quote(quote.quote, quote.author));
+        this.quotesLength = 0;
+        this.currentQuote = this.quotes[0].quote;
+        this.currentAuthor = this.quotes[0].author;
+
+        setTimeout(() => {
+            this.quoteChanged = true;
+        }, this.timeoutDuration);
+
+        this.quoteSubscription = interval(this.loopDuration).pipe(takeUntil(this._onDestroy)).subscribe((x => {
+            this.quotesLength++;
+            if (this.quotesLength === this.quotes.length){
+                this.quotesLength = 0;
+            }
+            this.nextQuote();
+        }));
+    }
+
+    setFadeDurationOnCssClasses(duration: number) {
+        duration = Math.round(duration / 1000);
+        this.renderer.setStyle(document.documentElement, '--fade-duration', `${duration}s`);
+    }
+
+    nextQuote() : void {
+        setTimeout(() => {
+            this.quoteChanged = true;
+        }, this.timeoutDuration);
+
+        this.currentQuote = this.quotes[this.quotesLength].quote;
+        this.currentAuthor = this.quotes[this.quotesLength].author;
+
+        this.quoteChanged = false;
+    }
+
+    ngOnDestroy(): void {
+        this._onDestroy.next();
+        this._onDestroy.complete();
+    }
+
+}
+export class Quote {
+    quote: string;
+    author?: string;
+
+    constructor(quote: string, author?: string) {
+        this.quote = quote;
+        this.author = author;
+    }
 }

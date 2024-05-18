@@ -1,3 +1,14 @@
-<p>
-    ngx-quote-looper works!
-</p>
+<div [ngClass]="{'fade-out': quoteChanged, 'fade-in': !quoteChanged}" class="ngx-looper" [ngStyle]="looperCSS">
+    <div class="row">
+        <div class="row ngx-quote" [ngStyle]="quoteCSS">
+            <div class="col-12">
+                {{currentQuote}}
+            </div>
+        </div>
+        <div class="row ngx-author" [ngStyle]="authorCSS">
+            <div class="col-12">
+                {{currentAuthor}}
+            </div>
+        </div>
+    </div>
+</div>
