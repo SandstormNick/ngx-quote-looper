@@ -1,6 +1,9 @@
 {
-  "name": "quote-looper",
+  "name": "ngx-quote-looper",
   "version": "0.0.0",
+  "keywords": ["angular", "typescript"],
+  "license": "MIT",
+  "author": {"name": "Nick Gibbens"},
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
