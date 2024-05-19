@@ -1,6 +1,9 @@
 {
   "name": "ngx-quote-looper",
   "version": "0.0.1",
+  "keywords": ["angular", "typescript"],
+  "license": "MIT",
+  "author": {"name": "Nick Gibbens"},
   "peerDependencies": {
     "@angular/common": "^17.3.0",
     "@angular/core": "^17.3.0"
