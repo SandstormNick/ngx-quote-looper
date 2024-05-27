@@ -18,6 +18,7 @@ npm i ngx-quote-looper
 - looperCSS - ```{ [key: string]: string }``` - Key-string value pair to style the HTML element with the looperCSS class.
 - fadeDuration - ```number``` - A number to control the duration of the fade in and fade out. This number should be treated as a millisecond value (3000 = 3 seconds). **Default is 3000 (3 seconds)**.
 - loopDuration - ```number``` - A number to control the duration of the full loop for a quote (both the fading in and out). This number should be treated as a millisecond value (3000 = 3 seconds). This value should be at least double the amount of the fadeDuration value. **Default is 6000 (6 seconds)**.
+- randomize - ```boolean``` - Controls whether the order of the quotes array should be randomized. **Default is false**.
 
 
 ## Usage
@@ -30,6 +31,7 @@ HTML
            [looperCSS]="{'padding': '2rem'}"
            [fadeDuration]="4000"
            [loopDuration]="10000"
+           [randomize]="true"
                 >
 </ngx-quote-looper>
 ```
