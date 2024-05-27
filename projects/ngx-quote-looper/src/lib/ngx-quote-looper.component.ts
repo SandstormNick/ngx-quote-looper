@@ -16,6 +16,7 @@ export class NgxQuoteLooperComponent implements OnInit {
     @Input() looperCSS: { [key: string]: string };
     @Input() fadeDuration: number = 3000;
     @Input() loopDuration: number = 6000;
+    @Input() randomize: boolean = false;
 
     quoteSubscription: Subscription;
     private _onDestroy = new Subject<void>();
@@ -30,26 +31,33 @@ export class NgxQuoteLooperComponent implements OnInit {
     constructor(private renderer: Renderer2) { }
 
     ngOnInit(): void {
-        this.setFadeDurationOnCssClasses(this.fadeDuration);
-        this.timeoutDuration = this.loopDuration - this.fadeDuration;
 
-
-        this.quotes = this.inputQuotes.map(quote => new Quote(quote.quote, quote.author));
-        this.quotesLength = 0;
-        this.currentQuote = this.quotes[0].quote;
-        this.currentAuthor = this.quotes[0].author;
-
-        setTimeout(() => {
-            this.quoteChanged = true;
-        }, this.timeoutDuration);
-
-        this.quoteSubscription = interval(this.loopDuration).pipe(takeUntil(this._onDestroy)).subscribe((x => {
-            this.quotesLength++;
-            if (this.quotesLength === this.quotes.length){
-                this.quotesLength = 0;
+        if (this.inputQuotes && this.inputQuotes.length > 0) {
+            this.setFadeDurationOnCssClasses(this.fadeDuration);
+            this.timeoutDuration = this.loopDuration - this.fadeDuration;
+            this.quotes = this.inputQuotes.map(quote => new Quote(quote.quote, quote.author));
+            
+            if (this.randomize) {
+                this.quotes = this.randomizeQuotes(this.quotes);
             }
-            this.nextQuote();
-        }));
+
+            this.quotesLength = 0;
+            this.currentQuote = this.quotes[0].quote;
+            this.currentAuthor = this.quotes[0].author;
+
+            setTimeout(() => {
+                this.quoteChanged = true;
+            }, this.timeoutDuration);
+
+            this.quoteSubscription = interval(this.loopDuration).pipe(takeUntil(this._onDestroy)).subscribe((x => {
+                this.quotesLength++;
+                if (this.quotesLength === this.quotes.length){
+                    this.quotesLength = 0;
+                }
+                this.nextQuote();
+            }));
+        }
+
     }
 
     setFadeDurationOnCssClasses(duration: number) {
@@ -66,6 +74,15 @@ export class NgxQuoteLooperComponent implements OnInit {
         this.currentAuthor = this.quotes[this.quotesLength].author;
 
         this.quoteChanged = false;
+    }
+
+    private randomizeQuotes(quoteData: any[]): any[] {
+        for (let i = quoteData.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [quoteData[i], quoteData[j]] = [quoteData[j], quoteData[i]];
+        }
+
+        return quoteData;
     }
 
     ngOnDestroy(): void {
